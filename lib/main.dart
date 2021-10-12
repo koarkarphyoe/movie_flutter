@@ -7,6 +7,7 @@ import 'package:movie_flutter/pages/home_page.dart';
 import 'pages/movie_details_screen.dart';
 
 void main() {
+  /// This is the first Flutter Project!
   RetrofitTheMovieDataAgentImpl().getNowPlayingMovie(1);
   runApp(
     MaterialApp(
