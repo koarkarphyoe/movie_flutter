@@ -1,5 +1,6 @@
 ///Base URL
-const baseUrl = "api.themoviedb.org";
+const baseUrlHttp = "api.themoviedb.org";
+const baseUrlDio = "https://api.themoviedb.org";
 
 ///End Point
 const endPoint = "/3/movie/now_playing";
@@ -10,5 +11,5 @@ const paramLanguage = "language";
 const paramPage = "page";
 
 /// Constant Value
-const apiKey = "87477ca9f65b86c0c51ce75a483f72b7";
-const languageEN_Us = "en_US";
+const apiKeyValue = "87477ca9f65b86c0c51ce75a483f72b7";
+const languageEnUsValue = "en_US";
