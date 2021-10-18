@@ -1,6 +1,9 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_flutter/data_vos/data/movie_vo.dart';
+import 'package:movie_flutter/data_vos/models/movie_model.dart';
+import 'package:movie_flutter/data_vos/models/movie_model_impl.dart';
 import 'package:movie_flutter/resources/colors.dart';
 import 'package:movie_flutter/resources/dimens.dart';
 import 'package:movie_flutter/resources/strings.dart';
@@ -12,7 +15,12 @@ import 'package:movie_flutter/widgets/more_showcases_text.dart';
 import 'package:movie_flutter/widgets/title_text.dart';
 import 'package:movie_flutter/widgets/title_text_with_more_showcases.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   List<String> genreList = [
     "Action",
     "Adventure",
@@ -21,6 +29,24 @@ class HomePage extends StatelessWidget {
     "Thriller",
     "Drama",
   ];
+
+  MovieModel mMovieModel = MovieModelImpl();
+
+  List<MovieVO>? mNowPlayingMovie;
+
+  @override
+  void initState() {
+    super.initState();
+
+    mMovieModel.getNowPlayingMovie(1).then((movieList) {
+      setState(() {
+        mNowPlayingMovie = movieList;
+      });
+    }).catchError((error) {
+      debugPrint("Error ===> ${error.toString()}");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +75,7 @@ class HomePage extends StatelessWidget {
             children: [
               BannerSectionView(),
               SizedBox(height: MARGIN_MEDIUM_1),
-              BestPopularFilmsAndSerialsSectionView(),
+              BestPopularFilmsAndSerialsSectionView(mNowPlayingMovie),
               SizedBox(height: MARGIN_MEDIUM_1),
               CheckMovieShowtimesSectionView(),
               SizedBox(height: MARGIN_MEDIUM_3),
@@ -68,10 +94,12 @@ class HomePage extends StatelessWidget {
 }
 
 class GenreSectionView extends StatelessWidget {
+  
+  final List<String> genreList;
+
   const GenreSectionView({
     required this.genreList,
   });
-  final List<String> genreList;
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +122,9 @@ class GenreSectionView extends StatelessWidget {
         ),
         Container(
           color: APP_BAR_COLOR,
-          padding: EdgeInsets.only(
-              top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
-          child: HorizontalMovieListView(),
+          padding:
+              EdgeInsets.only(top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
+          child: HorizontalMovieListView([]),
         ),
       ],
     );
@@ -168,8 +196,9 @@ class BestActorsSectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color:APP_BAR_COLOR,
-        padding: const EdgeInsets.only(top:MARGIN_MEDIUM_1,bottom:MARGIN_MEDIUM_1),
+      color: APP_BAR_COLOR,
+      padding:
+          const EdgeInsets.only(top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
       child: Column(
         children: [
           Padding(
@@ -177,8 +206,8 @@ class BestActorsSectionView extends StatelessWidget {
             child: TitleTextWithMoreShowcases(BEST_ACTORS, MORE_ACTORS),
           ),
           Container(
-            padding: EdgeInsets.only(
-                top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
+            padding:
+                EdgeInsets.only(top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
             height: BEST_ACTORS_VIEW_HEIGHT,
             child: ListView(
               padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),
@@ -227,6 +256,10 @@ class ShowcasesSectionView extends StatelessWidget {
 }
 
 class BestPopularFilmsAndSerialsSectionView extends StatelessWidget {
+  final List<MovieVO>? mMovie;
+
+  BestPopularFilmsAndSerialsSectionView(this.mMovie);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -239,15 +272,19 @@ class BestPopularFilmsAndSerialsSectionView extends StatelessWidget {
         SizedBox(height: MARGIN_MEDIUM_1),
         Container(
             color: APP_BAR_COLOR,
-            padding: EdgeInsets.only(
-                top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
-            child: HorizontalMovieListView()),
+            padding:
+                EdgeInsets.only(top: MARGIN_MEDIUM_1, bottom: MARGIN_MEDIUM_1),
+            child: HorizontalMovieListView(mMovie)),
       ],
     );
   }
 }
 
 class HorizontalMovieListView extends StatelessWidget {
+  final List<MovieVO>? mMovie;
+
+  HorizontalMovieListView(this.mMovie);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -256,9 +293,9 @@ class HorizontalMovieListView extends StatelessWidget {
       child: ListView.builder(
         padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
+        itemCount: mMovie?.length ?? 0,
         itemBuilder: (BuildContext context, int index) {
-          return MovieView();
+          return MovieView(mMovie?[index]);
         },
       ),
     );
@@ -269,6 +306,7 @@ class BannerSectionView extends StatefulWidget {
   @override
   State<BannerSectionView> createState() => _BannerSectionViewState();
 }
+
 class _BannerSectionViewState extends State<BannerSectionView> {
   double _position = 0;
   @override

@@ -1,6 +1,7 @@
 ///Base URL
 const baseUrlHttp = "api.themoviedb.org";
 const baseUrlDio = "https://api.themoviedb.org";
+const String imageBaseUrl = "http://image.tmdb.org/t/p/w400/";
 
 ///End Point
 const endPoint = "/3/movie/now_playing";

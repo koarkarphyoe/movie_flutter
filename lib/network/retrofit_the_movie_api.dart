@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:movie_flutter/data_vos/data/movie_vo.dart';
 import 'package:movie_flutter/network/api_constants.dart';
 import 'package:movie_flutter/network/responses/get_now_playing_response.dart';
 import 'package:retrofit/http.dart';
@@ -9,7 +10,7 @@ abstract class RetrofitTheMovieApi {
   factory RetrofitTheMovieApi(Dio dio) = _RetrofitTheMovieApi;
 
   @GET(endPoint)
-  Future<GetNowPlayingResponse>getNowPlayingMovie(
+  Future<GetNowPlayingResponse> getNowPlayingMovie(
     @Query(paramAPIKey) String paramAPIKey,
     @Query(paramLanguage) String paramLanguage,
     @Query(paramPage) String paramPage,

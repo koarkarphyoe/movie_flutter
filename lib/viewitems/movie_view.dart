@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:movie_flutter/data_vos/data/movie_vo.dart';
+import 'package:movie_flutter/network/api_constants.dart';
 import 'package:movie_flutter/resources/dimens.dart';
 import 'package:movie_flutter/widgets/star_rating_bar.dart';
 
 class MovieView extends StatelessWidget {
+  final MovieVO? mMovie;
+  MovieView(this.mMovie);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,54 +17,34 @@ class MovieView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          MovieImageView(),
+          Image.network(
+            "$imageBaseUrl${mMovie!.posterPath}",
+            // "https://upload.wikimedia.org/wikipedia/en/7/74/The_Wolverine_posterUS.jpg",
+            fit: BoxFit.cover,
+          ),
           SizedBox(height: MARGIN_MEDIUM_1),
-          MovieTitleTextView(),
-          MovieRatingBarView(),
+          Text(
+            "${mMovie!.title}",
+            style: TextStyle(
+                fontSize: MOVIE_TITLE_TEXT,
+                fontWeight: FontWeight.w500,
+                color: Colors.white),
+          ),
+          Row(
+            children: [
+              Text(
+                "8.20",
+                style: TextStyle(
+                    fontSize: MOVIE_TITLE_TEXT,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white),
+              ),
+              SizedBox(width: MARGIN_MEDIUM_1),
+              StarRatingBar(),
+            ],
+          ),
         ],
       ),
-    );
-  }
-}
-
-class MovieRatingBarView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "8.20",
-          style: TextStyle(
-              fontSize: MOVIE_TITLE_TEXT,
-              fontWeight: FontWeight.w900,
-              color: Colors.white),
-        ),
-        SizedBox(width: MARGIN_MEDIUM_1),
-        StarRatingBar(),
-      ],
-    );
-  }
-}
-
-class MovieTitleTextView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      "Westworld",
-      style: TextStyle(
-          fontSize: MOVIE_TITLE_TEXT,
-          fontWeight: FontWeight.w500,
-          color: Colors.white),
-    );
-  }
-}
-
-class MovieImageView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Image.network(
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnt0bHvCWQmOoCieTbnBya250f4A2G1TCr1HWHD929LxSft_hhGAsWw3FbjTLN3JjVvcE&usqp=CAU",
-      fit: BoxFit.cover,
     );
   }
 }
